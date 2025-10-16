@@ -4,10 +4,14 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 import plotly.graph_objects as go
 
-# PAGE CONFIG
+# -------------------------------------
+# 🌌 PAGE CONFIG
+# -------------------------------------
 st.set_page_config(page_title="ARES - AI Rocket & Habitat Design", layout="wide")
 
-# CUSTOM CSS ANIMATIONS
+# -------------------------------------
+# 🎨 CUSTOM CSS ANIMATIONS
+# -------------------------------------
 st.markdown("""
 <style>
 /* Animated gradient background */
@@ -60,38 +64,81 @@ div.stButton > button:first-child:hover {
 </style>
 """, unsafe_allow_html=True)
 
-# APP TITLE
-st.title(" ARES - AI Rocket & Habitat Design Assistant")
+# -------------------------------------
+# 🏠 APP TITLE
+# -------------------------------------
+st.title("🚀 ARES - AI Rocket & Habitat Design Assistant")
 st.markdown("### Welcome to ARES: Your intelligent AI for designing and visualizing space habitats and rockets.")
 
-#SIDEBAR NAVIGATION
+# -------------------------------------
+# 🧭 SIDEBAR NAVIGATION
+# -------------------------------------
 page = st.sidebar.radio(
     "Navigate",
-    [" AI Assistant", " Habitat Optimizer", " Rocket Visualization"]
+    ["🧠 AI Assistant", "🏠 Habitat Optimizer", "🎨 Rocket Visualization"]
 )
 
-# AI ASSISTANT
-if page == " AI Assistant":
-    st.header(" ARES Interactive Knowledge Assistant")
+# -------------------------------------
+# 🧠 PAGE 1: AI ASSISTANT
+# -------------------------------------
+if page == "🧠 AI Assistant":
+    st.header("🧠 ARES Interactive Knowledge Assistant")
     user_input = st.text_input("Type your question here:")
+
+    # Knowledge dictionary
+    knowledge = {
+        # 🚀 Rocket Basics
+        "rocket": "A rocket is a vehicle designed to travel into space by producing thrust through fuel combustion.",
+        "fuel": "Rocket fuel provides the chemical energy converted into thrust to propel the rocket.",
+        "oxidizer": "An oxidizer provides oxygen to fuel in space, since there is no atmospheric oxygen.",
+        "engine": "The rocket engine generates thrust to lift the rocket off the ground.",
+        "thrust": "Thrust is the force that propels the rocket forward, overcoming gravity and drag.",
+        "payload": "Payload is the cargo a rocket carries, like satellites, instruments, or crew.",
+        "stages": "Rockets often have multiple stages that detach to reduce weight and improve efficiency.",
+        "fin": "Fins stabilize the rocket during flight and help maintain proper orientation.",
+        "nose cone": "The nose cone is the aerodynamic tip of the rocket that reduces drag during ascent.",
+        "launch": "Launch is the process of sending a rocket from Earth into space.",
+        "orbit": "An orbit is the path a spacecraft follows around a celestial body due to gravity.",
+        "gravity": "Gravity is the force pulling objects toward each other; rockets must overcome it to launch.",
+
+        # 🏠 Space Habitat Basics
+        "habitat": "A space habitat is a structure designed to support life in space, providing air, water, temperature control, and space for activities.",
+        "nhv": "NHV stands for Net Habitable Volume; it’s the usable living space in a habitat.",
+        "crew": "Crew refers to the astronauts or people living in the habitat.",
+        "sleep volume": "Sleep volume is the space allocated per person for sleeping and rest.",
+        "social volume": "Social volume is the shared space for communal activities and recreation.",
+        "exercise volume": "Exercise volume is the area allocated for physical activity to maintain health in microgravity.",
+
+        # 🌌 Space & Physics
+        "microgravity": "Microgravity is the condition in space where objects appear weightless.",
+        "vacuum": "Space is a vacuum, meaning it has no atmosphere, air, or drag.",
+        "life support": "Life support systems provide oxygen, remove CO2, regulate temperature, and manage water and waste.",
+        "radiation": "Space radiation comes from the sun and cosmic rays; habitats must shield crew from it.",
+        "spacewalk": "A spacewalk is when an astronaut exits the habitat to work outside in space with a suit.",
+
+        # 🛠 Misc / App Terms
+        "comfort score": "Comfort score is a numerical value predicting crew satisfaction based on habitat design.",
+        "optimization": "Optimization means adjusting habitat parameters to maximize comfort or efficiency.",
+        "layout": "Layout refers to how the habitat spaces are arranged, like sleep, social, and exercise areas.",
+    }
 
     if st.button("Ask ARES"):
         if user_input.strip() == "":
             st.warning("Please enter a question first.")
         else:
             text = user_input.lower()
-            if "rocket" in text:
-                st.success("A rocket is a vehicle that uses thrust to overcome gravity and reach space.")
-            elif "fuel" in text:
-                st.success("Rocket fuel provides chemical energy that’s converted into thrust through combustion.")
-            elif "space" in text:
-                st.success("Space is a vacuum — no drag, but rockets must carry both fuel and oxidizer.")
-            elif "habitat" in text:
-                st.success("A space habitat maintains oxygen, temperature, and comfort for astronauts.")
-            else:
-                st.success("ARES: I don’t have data on that yet, but you can train me on new topics later!")
+            found = False
+            for key, ans in knowledge.items():
+                if key in text:
+                    st.success(ans)
+                    found = True
+                    break
+            if not found:
+                st.info("ARES: I’m still learning about this topic! You can ask about rockets, fuel, habitat design, or space terms.")
 
-#HABITAT OPTIMIZER
+# -------------------------------------
+# 🏠 PAGE 2: HABITAT OPTIMIZER
+# -------------------------------------
 elif page == "🏠 Habitat Optimizer":
     st.header("🏠 AI Habitat Comfort Optimizer")
 
@@ -124,7 +171,7 @@ elif page == "🏠 Habitat Optimizer":
     radius = st.sidebar.slider("Cylinder Radius (m)", 3.0, 6.0, 4.0)
     nhv_util = st.sidebar.slider("NHV Utilization (%)", 60, 120, 95)
 
-    if st.sidebar.button(" Generate Optimal Layout"):
+    if st.sidebar.button("🧠 Generate Optimal Layout"):
         candidates = pd.DataFrame({
             'crew_size': [crew_size] * 20,
             'radius': [radius] * 20,
@@ -146,9 +193,11 @@ elif page == "🏠 Habitat Optimizer":
     else:
         st.info("Adjust mission parameters and click *AI Recommend* to generate an optimized layout.")
 
-# ROCKET VISUALIZATION
-elif page == " Rocket Visualization":
-    st.header(" 3D Rocket Visualization")
+# -------------------------------------
+# 🎨 PAGE 3: ROCKET VISUALIZATION
+# -------------------------------------
+elif page == "🎨 Rocket Visualization":
+    st.header("🎨 3D Rocket Visualization")
 
     height = 10
     body_radius = 1
@@ -192,20 +241,21 @@ elif page == " Rocket Visualization":
         ),
         margin=dict(l=0, r=0, b=0, t=40),
         height=700,
-        title=" Interactive Metallic Rocket Model (Drag to Rotate)"
+        title="🔥 Interactive Metallic Rocket Model (Drag to Rotate)"
     )
 
     st.plotly_chart(fig, use_container_width=True)
 
-    st.subheader(" Rocket Component Breakdown")
+    st.subheader("🧩 Rocket Component Breakdown")
     st.markdown("""
     - *Cylindrical Body:* Contains fuel tanks, avionics, and payload.  
     - *Nose Cone:* Aerodynamic tip to reduce drag during ascent.  
     - *Fins:* Stabilize flight during ascent.  
     - *Engine Section:* Provides thrust for liftoff.  
     """)
-    
-# FOOTER
-st.markdown("---")
-st.caption("ARES v1.0| Built with Streamlit | Scikit-Learn | Plotly  | Animated by Caroline ")
 
+# -------------------------------------
+# FOOTER
+# -------------------------------------
+st.markdown("---")
+st.caption("ARES v2.2 | Built with Streamlit ✨ Scikit-Learn ✨ Plotly 🚀 | Animated by Caroline 💫")
