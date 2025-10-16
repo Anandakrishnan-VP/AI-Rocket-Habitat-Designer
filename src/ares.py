@@ -4,14 +4,10 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 import plotly.graph_objects as go
 
-# -------------------------------------
-# 🌌 PAGE CONFIG
-# -------------------------------------
+# PAGE CONFIG
 st.set_page_config(page_title="ARES - AI Rocket & Habitat Design", layout="wide")
 
-# -------------------------------------
-# 🎨 CUSTOM CSS ANIMATIONS
-# -------------------------------------
+# CUSTOM CSS ANIMATIONS
 st.markdown("""
 <style>
 /* Animated gradient background */
@@ -64,25 +60,19 @@ div.stButton > button:first-child:hover {
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------------------------
-# 🏠 APP TITLE
-# -------------------------------------
-st.title("🚀 ARES - AI Rocket & Habitat Design Assistant")
+# APP TITLE
+st.title(" ARES - AI Rocket & Habitat Design Assistant")
 st.markdown("### Welcome to ARES: Your intelligent AI for designing and visualizing space habitats and rockets.")
 
-# -------------------------------------
-# 🧭 SIDEBAR NAVIGATION
-# -------------------------------------
+#SIDEBAR NAVIGATION
 page = st.sidebar.radio(
     "Navigate",
-    ["🧠 AI Assistant", "🏠 Habitat Optimizer", "🎨 Rocket Visualization"]
+    [" AI Assistant", " Habitat Optimizer", " Rocket Visualization"]
 )
 
-# -------------------------------------
-# 🧠 PAGE 1: AI ASSISTANT
-# -------------------------------------
-if page == "🧠 AI Assistant":
-    st.header("🧠 ARES Interactive Knowledge Assistant")
+# AI ASSISTANT
+if page == " AI Assistant":
+    st.header(" ARES Interactive Knowledge Assistant")
     user_input = st.text_input("Type your question here:")
 
     if st.button("Ask ARES"):
@@ -101,9 +91,7 @@ if page == "🧠 AI Assistant":
             else:
                 st.success("ARES: I don’t have data on that yet, but you can train me on new topics later!")
 
-# -------------------------------------
-# 🏠 PAGE 2: HABITAT OPTIMIZER
-# -------------------------------------
+#HABITAT OPTIMIZER
 elif page == "🏠 Habitat Optimizer":
     st.header("🏠 AI Habitat Comfort Optimizer")
 
@@ -136,7 +124,7 @@ elif page == "🏠 Habitat Optimizer":
     radius = st.sidebar.slider("Cylinder Radius (m)", 3.0, 6.0, 4.0)
     nhv_util = st.sidebar.slider("NHV Utilization (%)", 60, 120, 95)
 
-    if st.sidebar.button("🧠 Generate Optimal Layout"):
+    if st.sidebar.button(" Generate Optimal Layout"):
         candidates = pd.DataFrame({
             'crew_size': [crew_size] * 20,
             'radius': [radius] * 20,
@@ -158,11 +146,9 @@ elif page == "🏠 Habitat Optimizer":
     else:
         st.info("Adjust mission parameters and click *AI Recommend* to generate an optimized layout.")
 
-# -------------------------------------
-# 🎨 PAGE 3: ROCKET VISUALIZATION
-# -------------------------------------
-elif page == "🎨 Rocket Visualization":
-    st.header("🎨 3D Rocket Visualization")
+# ROCKET VISUALIZATION
+elif page == " Rocket Visualization":
+    st.header(" 3D Rocket Visualization")
 
     height = 10
     body_radius = 1
@@ -206,21 +192,20 @@ elif page == "🎨 Rocket Visualization":
         ),
         margin=dict(l=0, r=0, b=0, t=40),
         height=700,
-        title="🔥 Interactive Metallic Rocket Model (Drag to Rotate)"
+        title=" Interactive Metallic Rocket Model (Drag to Rotate)"
     )
 
     st.plotly_chart(fig, use_container_width=True)
 
-    st.subheader("🧩 Rocket Component Breakdown")
+    st.subheader(" Rocket Component Breakdown")
     st.markdown("""
     - *Cylindrical Body:* Contains fuel tanks, avionics, and payload.  
     - *Nose Cone:* Aerodynamic tip to reduce drag during ascent.  
     - *Fins:* Stabilize flight during ascent.  
     - *Engine Section:* Provides thrust for liftoff.  
     """)
-
-# -------------------------------------
+    
 # FOOTER
-# -------------------------------------
 st.markdown("---")
-st.caption("ARES v2.2 | Built with Streamlit ✨ Scikit-Learn ✨ Plotly 🚀 | Animated by Caroline 💫")
+st.caption("ARES v1.0| Built with Streamlit | Scikit-Learn | Plotly  | Animated by Caroline ")
+
