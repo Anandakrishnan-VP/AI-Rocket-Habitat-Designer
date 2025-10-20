@@ -4,14 +4,14 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 import plotly.graph_objects as go
 
-# -------------------------------------
-# 🌌 PAGE CONFIG
-# -------------------------------------
+
+# PAGE CONFIG
+
 st.set_page_config(page_title="ARES - AI Rocket & Habitat Design", layout="wide")
 
-# -------------------------------------
-# 🎨 CUSTOM CSS ANIMATIONS
-# -------------------------------------
+
+# CUSTOM CSS ANIMATIONS
+
 st.markdown("""
 <style>
 /* Animated gradient background */
@@ -64,25 +64,25 @@ div.stButton > button:first-child:hover {
 </style>
 """, unsafe_allow_html=True)
 
-# -------------------------------------
-# 🏠 APP TITLE
-# -------------------------------------
-st.title("🚀 ARES - AI Rocket & Habitat Design Assistant")
+
+# APP TITLE
+
+st.title(" ARES - AI Rocket & Habitat Design Assistant")
 st.markdown("### Welcome to ARES: Your intelligent AI for designing and visualizing space habitats and rockets.")
 
-# -------------------------------------
-# 🧭 SIDEBAR NAVIGATION
-# -------------------------------------
+
+# SIDEBAR NAVIGATION
+
 page = st.sidebar.radio(
     "Navigate",
-    ["🧠 AI Assistant", "🏠 Habitat Optimizer", "🎨 Rocket Visualization"]
+    [" AI Assistant", " Habitat Optimizer", " Rocket Visualization"]
 )
 
-# -------------------------------------
-# 🧠 PAGE 1: AI ASSISTANT
-# -------------------------------------
-if page == "🧠 AI Assistant":
-    st.header("🧠 ARES Interactive Knowledge Assistant")
+
+# PAGE 1: AI ASSISTANT
+
+if page == " AI Assistant":
+    st.header(" ARES Interactive Knowledge Assistant")
     user_input = st.text_input("Type your question here:")
 
     # Knowledge dictionary
@@ -136,11 +136,11 @@ if page == "🧠 AI Assistant":
             if not found:
                 st.info("ARES: I’m still learning about this topic! You can ask about rockets, fuel, habitat design, or space terms.")
 
-# -------------------------------------
-# 🏠 PAGE 2: HABITAT OPTIMIZER
-# -------------------------------------
-elif page == "🏠 Habitat Optimizer":
-    st.header("🏠 AI Habitat Comfort Optimizer")
+
+#  PAGE 2: HABITAT OPTIMIZER
+
+elif page == " Habitat Optimizer":
+    st.header(" AI Habitat Comfort Optimizer")
 
     np.random.seed(42)
     n_samples = 500
@@ -193,69 +193,83 @@ elif page == "🏠 Habitat Optimizer":
     else:
         st.info("Adjust mission parameters and click *AI Recommend* to generate an optimized layout.")
 
-# -------------------------------------
-# 🎨 PAGE 3: ROCKET VISUALIZATION
-# -------------------------------------
-elif page == "🎨 Rocket Visualization":
-    st.header("🎨 3D Rocket Visualization")
 
-    height = 10
-    body_radius = 1
-    nose_height = 2
+# PAGE 3: ROCKET VISUALIZATION
 
+elif page == " Rocket Visualization":
+    st.header(" 3D Rocket Visualization (Interactive)")
+
+    # Sidebar parameters
+    st.sidebar.header("Rocket Parameters")
+    height = st.sidebar.slider("Rocket Body Height (m)", 5.0, 20.0, 10.0)
+    body_radius = st.sidebar.slider("Body Radius (m)", 0.5, 3.0, 1.0)
+    nose_height = st.sidebar.slider("Nose Cone Height (m)", 1.0, 5.0, 2.0)
+    fin_count = st.sidebar.slider("Number of Fins", 0, 6, 3)
+    fin_height = st.sidebar.slider("Fin Height (m)", 0.2, 2.0, 0.5)
+    flame_radius = st.sidebar.slider("Flame Radius (m)", 0.2, 1.5, 0.5)
+    flame_height = st.sidebar.slider("Flame Height (m)", 0.5, 2.0, 1.0)
+
+    theta = np.linspace(0, 2 * np.pi, 30)
+
+    # --- Rocket Body ---
     z = np.linspace(0, height, 50)
-    theta = np.linspace(0, 2 * np.pi, 50)
     Z, THETA = np.meshgrid(z, theta)
     X = body_radius * np.cos(THETA)
     Y = body_radius * np.sin(THETA)
 
     fig = go.Figure()
+    fig.add_trace(go.Surface(x=X, y=Y, z=Z,
+                             surfacecolor=Z,
+                             colorscale=[[0, "rgb(180,180,180)"], [1, "rgb(90,90,90)"]],
+                             showscale=False))
 
-    # Rocket body
-    fig.add_trace(go.Surface(
-        x=X, y=Y, z=Z,
-        surfacecolor=Z,
-        colorscale=[[0, "rgb(180,180,180)"], [1, "rgb(90,90,90)"]],
-        showscale=False,
-    ))
-
-    # Nose cone
+    # --- Nose Cone ---
     nose_z = np.linspace(height, height + nose_height, 20)
     nose_r = np.linspace(body_radius, 0, 20)
     NoseZ, NoseTheta = np.meshgrid(nose_z, theta)
-    NoseX = nose_r * np.cos(NoseTheta)
-    NoseY = nose_r * np.sin(NoseTheta)
-    fig.add_trace(go.Surface(
-        x=NoseX, y=NoseY, z=NoseZ,
-        surfacecolor=NoseZ,
-        colorscale=[[0, "rgb(220,220,220)"], [1, "rgb(120,120,120)"]],
-        showscale=False,
-    ))
+    NoseX = np.outer(np.ones_like(theta), nose_r) * np.cos(NoseTheta)
+    NoseY = np.outer(np.ones_like(theta), nose_r) * np.sin(NoseTheta)
+    fig.add_trace(go.Surface(x=NoseX, y=NoseY, z=NoseZ,
+                             surfacecolor=NoseZ,
+                             colorscale=[[0, "rgb(220,220,220)"], [1, "rgb(120,120,120)"]],
+                             showscale=False))
 
-    fig.update_layout(
-        scene=dict(
-            xaxis_title='X (m)',
-            yaxis_title='Y (m)',
-            zaxis_title='Height (m)',
+    # --- Fins ---
+    for i in range(fin_count):
+        angle = i * 2 * np.pi / fin_count
+        fin_x = np.array([body_radius, body_radius + 0.5, body_radius + 0.5, body_radius])
+        fin_y = np.array([-0.1, -0.1, 0.1, 0.1])
+        fin_z = np.array([0, 0, fin_height, fin_height])
+        finX_rot = fin_x * np.cos(angle) - fin_y * np.sin(angle)
+        finY_rot = fin_x * np.sin(angle) + fin_y * np.cos(angle)
+        fig.add_trace(go.Mesh3d(x=finX_rot, y=finY_rot, z=fin_z,
+                                 color='red', opacity=0.8))
+
+    # --- Flame ---
+    flame_r = np.linspace(0, flame_radius, 10)
+    flame_z = np.linspace(-flame_height, 0, 10)
+    FR, FT = np.meshgrid(flame_r, theta)
+    FZ, _ = np.meshgrid(flame_z, theta)
+    FlameX = FR * np.cos(FT)
+    FlameY = FR * np.sin(FT)
+    FlameZ = FZ
+    fig.add_trace(go.Surface(x=FlameX, y=FlameY, z=FlameZ,
+                             surfacecolor=FlameZ,
+                             colorscale=[[0, "yellow"], [0.5, "orange"], [1, "red"]],
+                             opacity=0.6, showscale=False))
+
+    # --- Layout ---
+    camera = dict(eye=dict(x=1.5, y=1.5, z=1.2))
+    fig.update_layout(scene=dict(
+            xaxis=dict(title='X (m)'),
+            yaxis=dict(title='Y (m)'),
+            zaxis=dict(title='Height (m)'),
             aspectmode='data',
+            camera=camera
         ),
         margin=dict(l=0, r=0, b=0, t=40),
         height=700,
-        title="🔥 Interactive Metallic Rocket Model (Drag to Rotate)"
+        title=" Interactive Rocket Model (Drag to Rotate)"
     )
 
     st.plotly_chart(fig, use_container_width=True)
-
-    st.subheader("🧩 Rocket Component Breakdown")
-    st.markdown("""
-    - *Cylindrical Body:* Contains fuel tanks, avionics, and payload.  
-    - *Nose Cone:* Aerodynamic tip to reduce drag during ascent.  
-    - *Fins:* Stabilize flight during ascent.  
-    - *Engine Section:* Provides thrust for liftoff.  
-    """)
-
-# -------------------------------------
-# FOOTER
-# -------------------------------------
-st.markdown("---")
-st.caption("ARES v2.2 | Built with Streamlit ✨ Scikit-Learn ✨ Plotly 🚀 | Animated by Caroline 💫")
